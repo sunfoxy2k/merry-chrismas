@@ -1,9 +1,9 @@
 
 import React from 'react';
-import Cat from '@/components/chrismas-cat'
+import ChristmasCat from '@/components/ChrismasCcat'
 
 export default function Home() {
   return (
-      <Cat />
+      <ChristmasCat />
   );
 }
