@@ -8,7 +8,7 @@ export default function Snow({ children }: { children: React.ReactNode }) {
     const snow = snowRef.current;
 
     if (snow) {
-      gsap.to(snow.children, {
+      gsap.to(Array.from(snow.children), {
         y: "100vh",
         repeat: -1,
         duration: 5,
@@ -24,7 +24,7 @@ export default function Snow({ children }: { children: React.ReactNode }) {
   return (
     <div className="relative h-screen overflow-hidden">
       <div ref={snowRef} className="absolute inset-0 pointer-events-none z-10">
-        {[...Array(80)].map((_, i) => (
+        {[...Array(100)].map((_, i) => (
           <div
             key={i}
             className="absolute bg-white rounded-full"
