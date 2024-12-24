@@ -43,6 +43,14 @@ function reducer(state: TypingState, action: Action): TypingState {
             return {...state, cursor: !state.cursor};
         case 'text':
             return handleTextTyping(state);
+        case 'reset':
+            return {
+                ...state,
+                displayText: '',
+                currentTextIndex: 0,
+                currentProcessIndex: 0,
+                textList: action.payload.textList,
+            };
         default:
             return state;
     }
@@ -52,7 +60,7 @@ const Intro = ({videoRef, setShowStarted, textList}) => {
     const [toClick, setToClick] = React.useState(false);
 
     if (toClick) {
-        return <ClickBtn videoRef={videoRef} setShowStarted={setShowStarted} />
+        return <ClickBtn videoRef={videoRef} setShowStarted={setShowStarted}  />
     } else {
         return <TypingWrapper textList={textList} setToClick={setToClick}/>
     }
@@ -76,7 +84,7 @@ const ClickBtn: React.FC<> = ({videoRef, setShowStarted}) => {
 }
 
 
-const TypingWrapper: React.FC<TypingWrapperProps> = ({ textList, setToClick, style}) => {
+const TypingWrapper: React.FC<TypingWrapperProps> = ({ textList, setToClick, style }) => {
     const [state, dispatch] = useReducer<TypingState, any>(reducer, {
         displayText: '',
         currentTextIndex: 0, 
@@ -85,18 +93,22 @@ const TypingWrapper: React.FC<TypingWrapperProps> = ({ textList, setToClick, sty
     });
 
     useEffect(() => {
-        const cursorInterval =  setInterval(() => {
-            dispatch({type: 'cursor'});
+        dispatch({ type: 'reset', payload: { textList } });
+    }, [textList]);
+
+    useEffect(() => {
+        const cursorInterval = setInterval(() => {
+            dispatch({ type: 'cursor' });
         }, CURSOR_INTERVAL_TIEM);
 
         const textInterval = setInterval(() => {
-            dispatch({type: 'text'});
+            dispatch({ type: 'text' });
         }, TEXT_INTERVAL_TIME);
 
-        if (state.displayText == textList[textList.length - 1]) {
+        if (state.displayText === textList[textList.length - 1]) {
             setTimeout(() => {
                 setToClick(true);
-            }, TEXT_INTERVAL_TIME)
+            }, TEXT_INTERVAL_TIME);
 
             clearInterval(cursorInterval);
             clearInterval(textInterval);
@@ -104,17 +116,16 @@ const TypingWrapper: React.FC<TypingWrapperProps> = ({ textList, setToClick, sty
 
         return () => {
             clearInterval(cursorInterval);
-            clearInterval(textInterval)
-        }
+            clearInterval(textInterval);
+        };
     }, [state.displayText, textList]);
 
-
-        return (
-            <h1 className="text-7xl text-white" style={style}>
-                {state.displayText}
-                {state.displayText != textList[textList.length -1]  && <span>_</span>}
-            </h1>
-        );
+    return (
+        <h1 className="text-7xl text-white" style={style}>
+            {state.displayText}
+            {state.displayText !== textList[textList.length - 1] && <span>_</span>}
+        </h1>
+    );
 };
 export {TypingWrapper}
 

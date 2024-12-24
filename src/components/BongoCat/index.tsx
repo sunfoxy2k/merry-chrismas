@@ -1,6 +1,6 @@
 import React, {useEffect, useRef} from 'react';
 
-export default function BongoCat({children, videoRef} : {children: React.ReactNode, showStarted: boolean}) {
+export default function BongoCat({children, videoRef, setShowEnded} : {children: React.ReactNode, showStarted: boolean}) {
 
 
   return (
@@ -9,6 +9,7 @@ export default function BongoCat({children, videoRef} : {children: React.ReactNo
       ref={videoRef}
         className="w-full h-full object-cover"
         src="/video.mp4"
+        onEnded={() => setShowEnded(true)}
         // autoPlay
         loop
         // muted
